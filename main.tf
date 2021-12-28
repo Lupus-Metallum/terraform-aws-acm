@@ -1,8 +1,3 @@
-data "aws_route53_zone" "this" {
-  zone_id      = var.r53_zone_id
-  private_zone = false
-}
-
 resource "aws_acm_certificate" "this" {
   domain_name       = var.domain_name
   validation_method = "DNS"
@@ -35,6 +30,10 @@ resource "aws_route53_record" "this" {
   ttl             = var.ttl
   type            = each.value.type
   zone_id         = var.r53_zone_id
+
+  depends_on = [
+    aws_acm_certificate.this
+  ]
 }
 
 resource "aws_acm_certificate_validation" "this" {
@@ -44,4 +43,8 @@ resource "aws_acm_certificate_validation" "this" {
   timeouts {
     create = "60m"
   }
+  depends_on = [
+    aws_acm_certificate.this,
+    aws_route53_record.this
+  ]
 }
