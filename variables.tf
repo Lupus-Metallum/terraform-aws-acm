@@ -25,3 +25,9 @@ variable "ttl" {
   type        = number
   default     = 60
 }
+
+variable "create_validation_records" {
+  description = "Should this module auto-create the needed ACM validation records?"
+  type        = bool
+  default     = true
+}
